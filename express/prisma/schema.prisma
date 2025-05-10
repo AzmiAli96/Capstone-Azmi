@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int          @id @default(autoincrement())
+  name       String
+  email      String       @unique
+  password   String
+  alamat     String
+  role       String
+  no_hp      String       @db.VarChar(12)
+  image      String?
+  pengiriman Pengiriman[]
+}
+
+model Wilayah {
+  id         Int          @id @default(autoincrement())
+  provinsi   String
+  wilayah    String
+  harga      Decimal
+  pengiriman Pengiriman[]
+}
+
+model Pengiriman {
+  id         Int      @id @default(autoincrement())
+  berat      Int
+  koli       Int
+  pembayaran String
+  total      Decimal
+  ket        String
+  image      String?
+  tanggal    DateTime @default(now())
+  id_user    Int
+  id_wilayah Int
+  user       User     @relation(fields: [id_user], references: [id])
+  wilayah    Wilayah  @relation(fields: [id_wilayah], references: [id])
+  status     Status[]
+}
+
+model Status {
+  id            Int        @id @default(autoincrement())
+  image         String?
+  spembayaran   String
+  spengiriman   String
+  pengiriman    Pengiriman @relation(fields: [id_pengiriman], references: [id])
+  id_pengiriman Int
+  laporan       Laporan[]
+}
+
+model Laporan {
+  id        Int      @id @default(autoincrement())
+  tanggal   DateTime @default(now())
+  bb        Decimal
+  tkredit   Decimal
+  tdebit    Decimal
+  tbersih   Decimal
+  status    Status   @relation(fields: [id_status], references: [id])
+  id_status Int
+}
