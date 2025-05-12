@@ -33,10 +33,19 @@ model Wilayah {
   pengiriman Pengiriman[]
 }
 
+model Ongkos {
+  id         Int          @id @default(autoincrement())
+  jemput     String
+  harga      Decimal
+  pengiriman Pengiriman[]
+}
+
 model Pengiriman {
-  id         Int      @id @default(autoincrement())
-  berat      Int
-  koli       Int
+  id     Int    @id @default(autoincrement())
+  berat  Int
+  koli   Int
+  jemput String 
+  tujuan String 
   pembayaran String
   total      Decimal
   ket        String
@@ -44,8 +53,10 @@ model Pengiriman {
   tanggal    DateTime @default(now())
   id_user    Int
   id_wilayah Int
+  id_ongkos  Int?
   user       User     @relation(fields: [id_user], references: [id])
   wilayah    Wilayah  @relation(fields: [id_wilayah], references: [id])
+  ongkos     Ongkos?  @relation(fields: [id_ongkos], references: [id])
   status     Status[]
 }
 

@@ -29,3 +29,27 @@ export const loginUser = async (item: userData) => {
     });
     return user;
 }
+
+export const findUser = async () => {
+    const user = await prisma.user.findMany();
+    return user;
+}
+
+export const findUserById = async (itemId: number) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: itemId,
+        },
+    });
+
+    return user;
+}
+
+
+export const deleteUser = async (itemId: number) => {
+    await prisma.user.delete({
+        where: {
+            id: itemId,
+        },
+    });
+}
